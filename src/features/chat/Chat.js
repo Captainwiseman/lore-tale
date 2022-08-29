@@ -1,16 +1,12 @@
 import React, { useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import {
-  Box,
-  Card,
-  CardContent,
-  Typography,
-  Button,
-  Avatar,
-  Grid,
+  // Button,
   Container,
   TextField,
 } from "@mui/material";
+
+import { ChatMessage } from "./ChatMessage";
 
 import { selectMessages, postMessage } from "./chatSlice";
 import styles from "./Chat.module.css";
@@ -19,39 +15,14 @@ export function Chat() {
   const messages = useSelector(selectMessages);
   const dispatch = useDispatch();
 
-  function createMessage(key, sender, msg) {
-    return (
-      <React.Fragment key={key}>
-        <Box sx={{ minWidth: 350, maxHeight:300, marginTop: 3, overflow: 'auto' }}>
-          <Card sx={{ minHeight: 70 }} elevation={3} color="primary.main">
-            <CardContent>
-              <Grid container columns={{ xs: 4, md: 12 }}>
-                <Grid container spacing={2}>
-                  <Grid item xs={2}>
-                    <Avatar alt="UNKNOWN" src="/broken-image.jpg" />
-                  </Grid>
-                  <Grid item xs={8}>
-                    <Typography
-                      sx={{ fontSize: 14 }}
-                      color="primary.contrastText"
-                      align="left"
-                    >
-                      {sender}
-                    </Typography>
-                  </Grid>
-                </Grid>
-                <Grid item xs={2}></Grid>
-              </Grid>
-              <Grid item xs={2} sx={{ marginLeft: 7, marginTop: 0 }}>
-                <Typography variant="body2" align="left" color="text.secondary">
-                  {msg}
-                </Typography>
-              </Grid>
-            </CardContent>
-          </Card>
-        </Box>
-      </React.Fragment>
-    );
+  function renderMessages() {
+    const messagesElements = messages.map((message) => {
+      const { key, sender, msg } = message;
+      // return createMessageElement(message.key, message.sender, message.msg);
+      return <ChatMessage key={key} sender={sender} msg={msg} />;
+    });
+
+    return messagesElements;
   }
 
   function sendMessage(event) {
@@ -72,11 +43,11 @@ export function Chat() {
           padding: 3,
           paddingTop: 0,
           marginBottom: 5,
+          maxHeight: 300,
+          overflow: "auto",
         }}
       >
-        {messages.map((message) =>
-          createMessage(message.key, message.sender, message.msg)
-        )}
+        {renderMessages()}
       </Container>
       <Container>
         <TextField
